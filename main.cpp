@@ -36,6 +36,15 @@ public:
         }
         return false;
     }
+    int find(int id)
+    {
+        int i = 0;
+        for (i = 0; i < this->size(); i++)
+        {
+            if(id == (*this)[i].get_id()) return i;
+        }
+        return -1;
+    }
 };
 
 class product
@@ -44,6 +53,7 @@ private:
     string name = "N/A";
     string producer = "N/A";
     int remaining = 0;
+    int id = 0;
     string category = "N/A";
     bool sailable = false;
     unsigned int price;
@@ -71,6 +81,14 @@ public:
     unsigned int get_price()
     {
         return this->price;
+    }
+    int get_id()
+    {
+        return this->id;
+    }
+    void set_id(int id)
+    {
+        this->id = id;
     }
     void set_name(string name)
     {
@@ -139,11 +157,30 @@ public:
     {
         this->buy = buy;
     }
+    void show_history()
+    {
+        cout << " Product"<<"                    " << "ID" << "       " << "Category" << "          " << "Number" << "   " << "Price" << endl;
+        for(int i = 0; i < history.size(); i++)
+        {
+            cout << history[i].get_name() << history[i].get_id() << history[i].get_category() << history[i].get_remaining() << history[i].get_price() << endl;
+        }
+    }
 };
 
 class admin : public user
 {
-
+public:
+    template<typename T>
+    int delu(T& data, int id)
+    {
+        int index = data.find(id);
+        if(index != -1)
+        {
+            data.remove(index);
+            return 1;
+        }
+        return -1;
+    }
 };
 
 template<typename T>
@@ -308,10 +345,123 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
     }
 }
 
+template<typename T>
+void table(T& data)
+{
+    line;
+    cout << " NAME" << "                    " << "ID\n\n";
+    for(int i = 0; i < data.size(); i++)
+    {
+        cout << "  " << data[i].get_name() << " -------------- " << data[i].get_id() << endl;
+    }
+}
+
+void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector<product>& pros, int& idp)
+{
+    int order, idd;
+    system("cls");
+    if(id < 1500)
+    {
+        while(true)
+        {
+            line;
+            cout << "\t\t\t * Welcome " << admins[id - 1].get_name() << " *";
+            line;
+            cout << "\t\tEnter of the numbers below:\n";
+            cout << "\t1)Log Out\n\t2)View Users\n\t3)View Products\n\t4)View History\n\t5)View Purchase History\n";
+            line;
+            cin >> order;
+            if(check_error(order, 1, 5)) continue;
+            if(order == 1)
+            {
+                system("cls");
+                return;
+            }
+            if(order == 2)
+            {
+                system("cls");
+                while(true)
+                {
+                    cout << "\tAdmins are:";
+                    table(admins);
+                    line;
+                    cout << "\tUsers are:";
+                    table(users);
+                    line;
+                    cout << "  Enter one of the numbers below:\n\n";
+                    cout << "\t1)Return\t2)Add admin\t3)Delete User\t4)View User History\n";
+                    cin >> order;
+                    if(check_error(order, 1, 4)) continue;
+                    if(order == 1)
+                    {
+                        system("cls");
+                        break;
+                    }
+                    if(order == 3)
+                    {
+                        while(true)
+                        {
+                            cout << "  Enter the user id to delete: (ENTER 0 TO CANCEL)\n";
+                            cin >> idd;
+                            if(idd == 0)
+                            {
+                                system("cls");
+                                break;
+                            }
+                            if(admins[id - 1].delu(users, idd) != -1)
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tUser deleted!\a";
+                                line;
+                                break;
+                            }
+                            system("cls");
+                            line;
+                            cout << "\t\t\tID is incorrect!\a";
+                            line;
+                        }
+                        continue;
+                    }
+                    if(order == 4)
+                    {
+                        while(true)
+                        {
+                            cout << "  Enter the user id to see history: (ENTER 0 TO CANCEL)\n";
+                            cin >> idd;
+                            if(idd == 0)
+                            {
+                                system("cls");
+                                break;
+                            }
+                            int index = users.find(idd);
+                            if(index != -1)
+                            {
+                                line;
+                                users[index].show_history();
+                                line;
+                                cout << "  Enter any key to return:\n";
+                                system("pause");
+                                break;
+                            }
+                            system("cls");
+                            line;
+                            cout << "\t\t\tID is incorrect!\a";
+                            line;
+                        }
+                        continue;
+                    }
+                }
+                continue;
+            }
+        }
+    }
+}
+
 int main()
 {
     sQVector<user> users;
-    QVector<product> pros;
+    sQVector<product> pros;
     sQVector<admin> admins;
     int idp = 12000, idu = 1500, order, check;
     while(true)
@@ -326,13 +476,13 @@ int main()
         if(order == 1)
         {
             check = login(admins, users);
-            if(check != -1) ; //mainwindow();
+            if(check != -1) mainwindow(admins, users, check, pros, idp);
             else continue;
         }
         if(order == 2)
         {
             check = signup(admins, users, idu);
-            if(check != -1) ;//mainwindow();
+            if(check != -1) mainwindow(admins, users, check, pros, idp);
             else continue;
         }
         if(order == 3) break;

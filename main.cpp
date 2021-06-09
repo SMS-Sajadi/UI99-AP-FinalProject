@@ -1,14 +1,11 @@
 #include <iostream>
-#include <QString>
-#include <QFile>
+#include <string>
 #include <QVector>
-#include <QMap>
-#include <QSet>
-#include <QTextStream>
 using namespace std;
 
-QTextStream in(stdin);
-QTextStream out(stdout);
+
+//QTextStream in(stdin);
+//QTextStream out(stdout);
 
 #define line cout << "\n-----------------------------------------------------------------------------\n"
 
@@ -30,7 +27,7 @@ public:
         }
         return -1;
     }
-    bool find(QString target)
+    bool find(string target)
     {
         int i = 0;
         for (i = 0; i < this->size(); i++)
@@ -44,18 +41,18 @@ public:
 class product
 {
 private:
-    QString name = "N/A";
-    QString producer = "N/A";
+    string name = "N/A";
+    string producer = "N/A";
     int remaining = 0;
-    QString category = "N/A";
+    string category = "N/A";
     bool sailable = false;
     unsigned int price;
 public:
-    QString get_name()
+    string get_name()
     {
         return this->name;
     }
-    QString get_producer()
+    string get_producer()
     {
         return this->producer;
     }
@@ -63,7 +60,7 @@ public:
     {
         return this->remaining;
     }
-    QString get_category()
+    string get_category()
     {
         return this->category;
     }
@@ -75,11 +72,11 @@ public:
     {
         return this->price;
     }
-    void set_name(QString name)
+    void set_name(string name)
     {
         this->name = name;
     }
-    void set_producer(QString producer)
+    void set_producer(string producer)
     {
         this->producer = producer;
     }
@@ -87,7 +84,7 @@ public:
     {
         this->remaining = remaining;
     }
-    void set_category(QString category)
+    void set_category(string category)
     {
         this->category = category;
     }
@@ -104,17 +101,17 @@ public:
 class user
 {
 protected:
-    QString name = "N/A";
-    QString pass = "N/A";
+    string name = "N/A";
+    string pass = "N/A";
     bool buy = false;
     int id = 0;
     QVector<product> history;
 public:
-    QString get_name()
+    string get_name()
     {
         return this->name;
     }
-    QString get_pass()
+    string get_pass()
     {
         return this->pass;
     }
@@ -130,11 +127,11 @@ public:
     {
         this->id = id;
     }
-    void set_name(QString name)
+    void set_name(string name)
     {
         this->name = name;
     }
-    void set_pass(QString pass)
+    void set_pass(string pass)
     {
         this->pass = pass;
     }
@@ -163,9 +160,9 @@ bool check_error(T order, T first, T sec)
     return false;
 }
 
-bool signup(sQVector<admin>& admins, sQVector<user>& users, int& idu )
+int signup(sQVector<admin>& admins, sQVector<user>& users, int& idu )
 {
-    QString entry;
+    string entry;
     system("cls");
     if(admins.empty())
     {
@@ -176,11 +173,11 @@ bool signup(sQVector<admin>& admins, sQVector<user>& users, int& idu )
         while(true)
         {
             cout << "   Enter your username: (NO SPACE, ENTER 0 TO CANCEL)\n";
-            in >> entry;
+            cin >> entry;
             if(entry == "0")
             {
                 system("cls");
-                return false;
+                return -1;
             }
             if(users.find(entry))
             {
@@ -194,16 +191,16 @@ bool signup(sQVector<admin>& admins, sQVector<user>& users, int& idu )
         }
         a.set_name(entry);
         cout << "   Enter your password: (NO SPACE, ENTER 0 TO CANCEL)\n";
-        in >> entry;
+        cin >> entry;
         if(entry == "0")
         {
             system("cls");
-            return false;
+            return -1;
         }
         a.set_pass(entry);
         a.set_id(1);
         admins.append(a);
-        return true;
+        return 1;
     }
     user u;
     line;
@@ -211,13 +208,13 @@ bool signup(sQVector<admin>& admins, sQVector<user>& users, int& idu )
     while(true)
     {
         cout << "   Enter your username: (NO SPACE, ENTER 0 TO CANCEL)\n";
-        in >> entry;
+        cin >> entry;
         if(entry == "0")
         {
             system("cls");
-            return false;
+            return -1;
         }
-        if(users.find(entry))
+        if(users.find(entry) || admins.find(entry))
         {
             system("cls");
             line;
@@ -229,29 +226,29 @@ bool signup(sQVector<admin>& admins, sQVector<user>& users, int& idu )
     }
     u.set_name(entry);
     cout << "   Enter your password: (NO SPACE, ENTER 0 TO CANCEL)\n";
-    in >> entry;
+    cin >> entry;
     if(entry == "0")
     {
         system("cls");
-        return false;
+        return -1;
     }
     u.set_pass(entry);
     u.set_id(idu++);
     users.append(u);
-    return true;
+    return idu - 1;
 }
 
 int login(sQVector<admin>& admins, sQVector<user>& users)
 {
     int index;
-    QString entry;
+    string entry;
     system("cls");
     line;
     line;
     while(true)
     {
         cout << "   Enter your username: (ENTER 0 TO CANCEL)\n";
-        in >> entry;
+        cin >> entry;
         if(entry == "0")
         {
             system("cls");
@@ -264,7 +261,7 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
             while(true)
             {
                 cout << "   Enter your password: (ENTER 0 TO CANCEL)\n";
-                in >> entry;
+                cin >> entry;
                 if(entry == "0")
                 {
                     system("cls");
@@ -273,7 +270,7 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
                 u.set_pass(entry);
                 index = users.find(u);
                 if(index != -1)
-                    return index;
+                    return users[index].get_id();
                 system("cls");
                 line;
                 cout << "\t\tPassword is incorrect Try again!\a";
@@ -288,7 +285,7 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
             while(true)
             {
                 cout << "   Enter your password: (ENTER 0 TO CANCEL)\n";
-                in >> entry;
+                cin >> entry;
                 if(entry == "0")
                 {
                     system("cls");
@@ -297,7 +294,7 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
                 a.set_pass(entry);
                 index = admins.find(a);
                 if(index != -1)
-                    return index;
+                    return admins[index].get_id();
                 system("cls");
                 line;
                 cout << "\t\tPassword is incorrect Try again!\a";
@@ -314,9 +311,9 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
 int main()
 {
     sQVector<user> users;
-    QMap<product,int> pros;
+    QVector<product> pros;
     sQVector<admin> admins;
-    int idp = 12000, idu = 1500, order;
+    int idp = 12000, idu = 1500, order, check;
     while(true)
     {
         cout << "\n\t   ********* Welcome to the Soroush Shoping Mall *********" << endl;
@@ -328,12 +325,14 @@ int main()
         if(check_error(order, 1, 3)) continue;
         if(order == 1)
         {
-            if(login(admins, users) != -1) ; //mainwindow();
+            check = login(admins, users);
+            if(check != -1) ; //mainwindow();
             else continue;
         }
         if(order == 2)
         {
-            if(signup(admins, users, idu)) ;//mainwindow();
+            check = signup(admins, users, idu);
+            if(check != -1) ;//mainwindow();
             else continue;
         }
         if(order == 3) break;

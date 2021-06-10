@@ -55,7 +55,7 @@ private:
     int remaining = 0;
     int id = 0;
     string category = "N/A";
-    bool sailable = false;
+    bool saleable = false;
     unsigned int price;
 public:
     string get_name()
@@ -74,9 +74,9 @@ public:
     {
         return this->category;
     }
-    bool get_sailable()
+    bool get_saleable()
     {
-        return this->sailable;
+        return this->saleable;
     }
     unsigned int get_price()
     {
@@ -106,9 +106,9 @@ public:
     {
         this->category = category;
     }
-    void set_sailable(bool sailable)
+    void set_saleable(bool saleable)
     {
-        this->sailable = sailable;
+        this->saleable = saleable;
     }
     void set_price(unsigned int price)
     {
@@ -121,9 +121,9 @@ class user
 protected:
     string name = "N/A";
     string pass = "N/A";
-    bool buy = false;
+    bool buy = true;
     int id = 0;
-    QVector<product> history;
+    sQVector<product> history;
 public:
     string get_name()
     {
@@ -181,12 +181,50 @@ public:
         }
         return -1;
     }
+    int add_admin(int id, sQVector<admin>& admins, sQVector<user>& users)
+    {
+        admin a;
+        int index = users.find(id);
+        if(index != -1)
+        {
+            a.set_name(users[index].get_name());
+            a.set_pass(users[index].get_pass());
+            a.set_id(admins.size() + 1);
+            admins.append(a);
+            users.remove(index);
+            return 1;
+        }
+        return -1;
+    }
+    bool ch_block(sQVector<user>& users, int id)
+    {
+        int index = users.find(id);
+        if(index != -1)
+        {
+            users[index].set_buy(!users[index].get_buy());
+            return true;
+        }
+        return false;
+    }
 };
 
 template<typename T>
 bool check_error(T order, T first, T sec)
 {
     if(order < first || order > sec)
+    {
+        system("cls");
+        cin.clear();
+        cin.ignore();
+        cout << "\n-------------------------- Wrong Input Try Again! --------------------------\a\n";
+        return true;
+    }
+    return false;
+}
+
+bool check_error(int num)
+{
+    if(num < 0)
     {
         system("cls");
         cin.clear();
@@ -349,10 +387,41 @@ template<typename T>
 void table(T& data)
 {
     line;
-    cout << " NAME" << "                    " << "ID\n\n";
+    cout << " NAME" << "                    " << "ID" << "                   " << "BLOCK\n\n";
     for(int i = 0; i < data.size(); i++)
     {
-        cout << "  " << data[i].get_name() << " -------------- " << data[i].get_id() << endl;
+        cout << "  " << data[i].get_name() << " -------------- " << data[i].get_id() << " -------------- ";
+        if(data[i].get_buy()) cout << "FALSE" << endl;
+        else cout << "TRUE" << endl;
+    }
+}
+
+void tablep(sQVector<product>& pros, bool user)
+{
+    line;
+    if(!user)
+    {
+        for(int i = 0; i < pros.size(); i++)
+        {
+            cout << " NAME:" << "               " << pros[i].get_name() << "ID:" << "               " << pros[i].get_id() << endl;
+            cout << " PRICE:" << "               " << pros[i].get_price() << "REMAINING:" << "               " << pros[i].get_remaining() << endl;
+            cout << " PRODUCER:" << "               " << pros[i].get_producer() << "CATEGOTY:" << "               " << pros[i].get_category() << endl;
+            cout << " SALEABLE:" << "               ";
+            if(pros[i].get_saleable()) cout << "TRUE" << endl;
+            else cout << "FALSE" << endl;
+            if(i != pros.size() - 1) cout << "\t\t----------------------------------------------\n\n";
+        }
+        return;
+    }
+    for(int i = 0; i < pros.size(); i++)
+    {
+        if(pros[i].get_saleable())
+        {
+            cout << " NAME:" << "               " << pros[i].get_name() << "ID:" << "               " << pros[i].get_id() << endl;
+            cout << " PRICE:" << "               " << pros[i].get_price() << "REMAINING:" << "               " << pros[i].get_remaining() << endl;
+            cout << " PRODUCER:" << "               " << pros[i].get_producer() << "CATEGOTY:" << "               " << pros[i].get_category() << endl;
+            cout << "\t\t----------------------------------------------\n\n";
+        }
     }
 }
 
@@ -368,10 +437,10 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
             cout << "\t\t\t * Welcome " << admins[id - 1].get_name() << " *";
             line;
             cout << "\t\tEnter of the numbers below:\n";
-            cout << "\t1)Log Out\n\t2)View Users\n\t3)View Products\n\t4)View History\n\t5)View Purchase History\n";
+            cout << "\t1)Log Out\n\t2)View Users\n\t3)View Products\n\t4)View Purchase Log\n";
             line;
             cin >> order;
-            if(check_error(order, 1, 5)) continue;
+            if(check_error(order, 1, 4)) continue;
             if(order == 1)
             {
                 system("cls");
@@ -389,13 +458,45 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     table(users);
                     line;
                     cout << "  Enter one of the numbers below:\n\n";
-                    cout << "\t1)Return\t2)Add admin\t3)Delete User\t4)View User History\n";
+                    cout << "\t1)Return\t2)Add admin\t3)Delete User\t4)Block/Unblock user\t5)View User History\n";
                     cin >> order;
-                    if(check_error(order, 1, 4)) continue;
+                    if(check_error(order, 1, 5)) continue;
                     if(order == 1)
                     {
                         system("cls");
                         break;
+                    }
+                    if(order == 2)
+                    {
+                        while(true)
+                        {
+                            cout << "  Enter the user id to add as an admin: (ENTER 0 TO CANCEL)\n";
+                            cin >> idd;
+                            if(idd == 0)
+                            {
+                                system("cls");
+                                break;
+                            }
+                            if(admins[id - 1].add_admin(idd, admins, users) != -1)
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tAdmin added!\a";
+                                line;
+                                break;
+                            }
+                            system("cls");
+                            line;
+                            cout << "\t\t\tID is incorrect!\a";
+                            line;
+                            cout << "\tAdmins are:";
+                            table(admins);
+                            line;
+                            cout << "\tUsers are:";
+                            table(users);
+                            line;
+                        }
+                        continue;
                     }
                     if(order == 3)
                     {
@@ -420,10 +521,48 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                             line;
                             cout << "\t\t\tID is incorrect!\a";
                             line;
+                            cout << "\tAdmins are:";
+                            table(admins);
+                            line;
+                            cout << "\tUsers are:";
+                            table(users);
+                            line;
                         }
                         continue;
                     }
                     if(order == 4)
+                    {
+                        while(true)
+                        {
+                            cout << "  Enter the user id to block/unblock: (ENTER 0 TO CANCEL)\n";
+                            cin >> idd;
+                            if(idd == 0)
+                            {
+                                system("cls");
+                                break;
+                            }
+                            if(admins[id - 1].ch_block(users, idd))
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tUser blocked/unblocked!\a";
+                                line;
+                                break;
+                            }
+                            system("cls");
+                            line;
+                            cout << "\t\t\tID is incorrect!\a";
+                            line;
+                            cout << "\tAdmins are:";
+                            table(admins);
+                            line;
+                            cout << "\tUsers are:";
+                            table(users);
+                            line;
+                        }
+                        continue;
+                    }
+                    if(order == 5)
                     {
                         while(true)
                         {
@@ -442,16 +581,122 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                 line;
                                 cout << "  Enter any key to return:\n";
                                 system("pause");
+                                system("cls");
                                 break;
                             }
                             system("cls");
                             line;
                             cout << "\t\t\tID is incorrect!\a";
                             line;
+                            cout << "\tAdmins are:";
+                            table(admins);
+                            line;
+                            cout << "\tUsers are:";
+                            table(users);
+                            line;
                         }
                         continue;
                     }
                 }
+                continue;
+            }
+            if(order == 3)
+            {
+                system("cls");
+                while(true)
+                {
+                   cout << "\tProducts are:";
+                   tablep(pros, false);
+                   line;
+                   cout << "  Enter one of the numbers below:\n\n";
+                   cout << "\t1)Return\t2)Add product\t3)Delete product\t4)Change product\n";
+                   cin >> order;
+                   if(check_error(order, 1, 4)) continue;
+                   if(order == 1)
+                   {
+                       system("cls");
+                       break;
+                   }
+                   if(order == 2)
+                   {
+                       system("cls");
+                       product p;
+                       string entry;
+                       int num;
+                       while(true)
+                       {
+                           cout << "  Enter the name of product: (ENTER 0 TO CANCEL)\n";
+                           cin.ignore();
+                           getline(cin, entry);
+                           if(entry == "0")
+                           {
+                               system("cls");
+                               break;
+                           }
+                           p.set_name(entry);
+                           cout << "  Enter the name of producer: (ENTER 0 TO CANCEL)\n";
+                           getline(cin, entry);
+                           if(entry == "0")
+                           {
+                               system("cls");
+                               break;
+                           }
+                           p.set_producer(entry);
+                           cout << "  Enter the category: (ENTER 0 TO CANCEL)\n";
+                           getline(cin, entry);
+                           if(entry == "0")
+                           {
+                               system("cls");
+                               break;
+                           }
+                           p.set_category(entry);
+                           while(true)
+                           {
+                               cout << "  Enter the price:\n";
+                               cin >> num;
+                               if(check_error(num)) continue;
+                               p.set_price(num);
+                               break;
+                           }
+                           while(true)
+                           {
+                               cout << "  Enter the remaining:\n";
+                               cin >> num;
+                               if(check_error(num)) continue;
+                               p.set_remaining(num);
+                               break;
+                           }
+                           while(true)
+                           {
+                               cout << "  Do you want to make it saleable? (1 == YES, 2 == NO)\n";
+                               cin >> num;
+                               if(check_error(num, 1, 2)) continue;
+                               if(num == 1) p.set_saleable(true);
+                               else p.set_saleable(false);
+                               break;
+                           }
+                           p.set_id(idp++);
+                           pros.append(p);
+                           system("cls");
+                           line;
+                           cout << "\t\t\tProduct added!\a";
+                           line;
+                           break;
+                       }
+                       continue;
+                   }
+                }
+                continue;
+            }
+            if(order == 4)
+            {
+                system("cls");
+                line;
+                admins[0].show_history();
+                line;
+                cout << "  Enter any key to return:\n";
+                system("pause");
+                system("cls");
                 continue;
             }
         }

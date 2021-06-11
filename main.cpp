@@ -101,6 +101,7 @@ public:
     void set_remaining(int remaining)
     {
         this->remaining = remaining;
+        if (remaining == 0) this->set_saleable(false);
     }
     void set_category(string category)
     {
@@ -112,7 +113,7 @@ public:
     }
     void set_price(unsigned int price)
     {
-        this->remaining = price;
+        this->price = price;
     }
 };
 
@@ -427,7 +428,7 @@ void tablep(sQVector<product>& pros, bool user)
 
 void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector<product>& pros, int& idp)
 {
-    int order, idd;
+    int order, idd, index;
     system("cls");
     if(id < 1500)
     {
@@ -437,10 +438,10 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
             cout << "\t\t\t * Welcome " << admins[id - 1].get_name() << " *";
             line;
             cout << "\t\tEnter of the numbers below:\n";
-            cout << "\t1)Log Out\n\t2)View Users\n\t3)View Products\n\t4)View Purchase Log\n";
+            cout << "\t1)Log Out\n\t2)View Users\n\t3)View Products\n\t4)View Purchase Log\n\t5)Change Settings\n";
             line;
             cin >> order;
-            if(check_error(order, 1, 4)) continue;
+            if(check_error(order, 1, 5)) continue;
             if(order == 1)
             {
                 system("cls");
@@ -685,6 +686,189 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                        }
                        continue;
                    }
+                   if(order == 3)
+                   {
+                       while(true)
+                       {
+                           cout << "  Enter the product id to delete: (ENTER 0 TO CANCEL)\n";
+                           cin >> idd;
+                           if(idd == 0)
+                           {
+                               system("cls");
+                               break;
+                           }
+                           if(admins[id - 1].delu(pros, idd) != -1)
+                           {
+                               system("cls");
+                               line;
+                               cout << "\t\t\tProduct deleted!\a";
+                               line;
+                               break;
+                           }
+                           system("cls");
+                           line;
+                           cout << "\t\t\tID is incorrect!\a";
+                           line;
+                           cout << "\tproducts are:";
+                           tablep(pros, false);
+                           line;
+                       }
+                       continue;
+                   }
+                   if(order == 4)
+                   {
+                       int index;
+                       while(true)
+                       {
+                           cout << "  Enter the product id to change: (ENTER 0 TO CANCEL)\n";
+                           cin >> idd;
+                           if(idd == 0)
+                           {
+                               system("cls");
+                               break;
+                           }
+                           index = pros.find(idd);
+                           if(index != -1)
+                           {
+                               system("cls");
+                               string entry;
+                               while(true)
+                               {
+                                   line;
+                                   cout << "  NAME" << "----------------" << "ID" << "----------------";
+                                   cout << "CATEGORY" << "----------------" << "PRICE" << "----------------";
+                                   cout << "PRODUCER" << "----------------" << "REMAINING" << "----------------";
+                                   cout << "SALEABLE" << endl;
+                                   cout << pros[index].get_name() << "----------------" << pros[index].get_id() << "----------------" << pros[index].get_category();
+                                   cout << "----------------" << pros[index].get_price() << "----------------" << pros[index].get_producer() << "----------------";
+                                   cout << pros[index].get_remaining() << "----------------";
+                                   if(pros[index].get_saleable()) cout << "TRUE" << endl;
+                                   else cout << "FALSE" << endl;
+                                   line;
+                                   line;
+                                   cout << "  Enter one of the numbers below:\n";
+                                   cout << "\t1)Return\n\t2)Change name\n\t3)Change producer\n\t4)Change category\n\t5)Change price\n\t6)Change remaining\n\t7)Change saleablity\n";
+                                   cin >> order;
+                                   if(check_error(order, 1, 7)) continue;
+                                   cin.ignore();
+                                   if(order == 1)
+                                   {
+                                       system("cls");
+                                       break;
+                                   }
+                                   if(order == 2)
+                                   {
+                                       cout << "  Enter the new name: (ENTER 0 TO CANCEL)\n";
+
+                                       getline(cin, entry);
+                                       if(entry == "0")
+                                       {
+                                           system("cls");
+                                           continue;
+                                       }
+                                       pros[index].set_name(entry);
+                                       system("cls");
+                                       line;
+                                       cout << "\t\t\tName chagned!\a";
+                                       line;
+                                       continue;
+                                   }
+                                   if(order == 3)
+                                   {
+                                       cout << "  Enter the new producer: (ENTER 0 TO CANCEL)\n";
+                                       getline(cin, entry);
+                                       if(entry == "0")
+                                       {
+                                           system("cls");
+                                           continue;
+                                       }
+                                       pros[index].set_producer(entry);
+                                       system("cls");
+                                       line;
+                                       cout << "\t\t\tProducer chagned!\a";
+                                       line;
+                                       continue;
+                                   }
+                                   if(order == 4)
+                                   {
+                                       cout << "  Enter the new category: (ENTER 0 TO CANCEL)\n";
+                                       getline(cin, entry);
+                                       if(entry == "0")
+                                       {
+                                           system("cls");
+                                           continue;
+                                       }
+                                       pros[index].set_category(entry);
+                                       system("cls");
+                                       line;
+                                       cout << "\t\t\tCategory chagned!\a";
+                                       line;
+                                       continue;
+                                   }
+                                   if(order == 5)
+                                   {
+                                       while(true)
+                                       {
+                                           cout << "  Enter the new price:\n";
+                                           cin >> idd;
+                                           if(check_error(idd)) continue;
+                                           cin.ignore();
+                                           pros[index].set_price(idd);
+                                           system("cls");
+                                           line;
+                                           cout << "\t\t\tPrice chagned!\a";
+                                           line;
+                                           break;
+                                       }
+                                       continue;
+                                   }
+                                   if(order == 6)
+                                   {
+                                       while(true)
+                                       {
+                                           cout << "  Enter the new remaining:\n";
+                                           cin >> idd;
+                                           if(check_error(idd)) continue;
+                                           cin.ignore();
+                                           pros[index].set_remaining(idd);
+                                           system("cls");
+                                           line;
+                                           cout << "\t\t\tRemaining chagned!\a";
+                                           line;
+                                           break;
+                                       }
+                                       continue;
+                                   }
+                                   if(order == 7)
+                                   {
+                                       if(pros[index].get_remaining() == 0)
+                                       {
+                                           system("cls");
+                                           line;
+                                           cout << "\t\t\tIt cant be changed!\a";
+                                           line;
+                                           continue;
+                                       }
+                                       pros[index].set_saleable(!pros[index].get_saleable());
+                                       system("cls");
+                                       line;
+                                       cout << "\t\t\tSalebility changed!\a";
+                                       line;
+                                       continue;
+                                   }
+                               }
+                               break;
+                           }
+                           system("cls");
+                           line;
+                           cout << "\t\t\tID is incorrect!\a";
+                           line;
+                           cout << "\tproducts are:";
+                           tablep(pros, false);
+                           line;
+                       }
+                       continue;
+                   }
                 }
                 continue;
             }
@@ -699,8 +883,80 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                 system("cls");
                 continue;
             }
+            if(order == 5)
+            {
+                string entry;
+                system("cls");
+                while(true)
+                {
+                    line;
+                    cout << "  Enter one of the numbers below:\n";
+                    cout << "\t1)Return\n\t2)Change username\n\t3)Change password\n";
+                    cin >> idd;
+                    if(check_error(idd, 1, 3)) continue;
+                    cin.ignore();
+                    if(idd == 1)
+                    {
+                        system("cls");
+                        break;
+                    }
+                    if(idd == 2)
+                    {
+                        system("cls");
+                        while(true)
+                        {
+                            line;
+                            line;
+                            cout << "   Enter your new username: (NO SPACE, ENTER 0 TO CANCEL)\n";
+                            cin >> entry;
+                            if(entry == "0")
+                            {
+                                system("cls");
+                                break;
+                            }
+                            if(users.find(entry) || admins.find(entry))
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tUsername is in use!\a";
+                                line;
+                                continue;
+                            }
+                            system("cls");
+                            admins[id - 1].set_name(entry);
+                            line;
+                            cout << "\t\t\tUsername changed!\a";
+                            line;
+                            break;
+                        }
+                        continue;
+                    }
+                    if(idd == 3)
+                    {
+                        system("cls");
+                        line;
+                        line;
+                        cout << "   Enter your password: (NO SPACE, ENTER 0 TO CANCEL)\n";
+                        cin >> entry;
+                        if(entry == "0")
+                        {
+                            system("cls");
+                            continue;
+                        }
+                        system("cls");
+                        admins[id - 1].set_pass(entry);
+                        line;
+                        cout << "\t\t\tPassword changed!\a";
+                        line;
+                        continue;
+                    }
+                }
+                continue;
+            }
         }
     }
+    index = users.find(id);
+
 }
 
 int main()
@@ -734,6 +990,6 @@ int main()
     }
     system("cls");
     line;
-    cout << "\n\n|------------------------- Hope to see you again :) -------------------------|\n";
+    cout << "\n|------------------------- Hope to see you again :) -------------------------|\n\n";
     return 0;
 }

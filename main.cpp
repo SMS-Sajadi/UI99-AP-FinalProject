@@ -243,6 +243,39 @@ public:
                 pros[i].set_category(newc);
         }
     }
+    void show(sQVector<product>& pros, bool user, int index)
+    {
+        line;
+        if(!user)
+        {
+            for(int i = 0; i < pros.size(); i++)
+            {
+                if(pros[i].get_category() == (*this)[index])
+                {
+                    cout << " NAME:" << "               " << pros[i].get_name() << "ID:" << "               " << pros[i].get_id() << endl;
+                    cout << " PRICE:" << "               " << pros[i].get_price() << "REMAINING:" << "               " << pros[i].get_remaining() << endl;
+                    cout << " PRODUCER:" << "               " << pros[i].get_producer() << endl;
+                    cout << " SALEABLE:" << "               ";
+                    if(pros[i].get_saleable()) cout << "TRUE" << endl;
+                    else cout << "FALSE" << endl;
+                    cout << "\t\t----------------------------------------------\n\n";
+                }
+            }
+            line;
+            return;
+        }
+        for(int i = 0; i < pros.size(); i++)
+        {
+            if(pros[i].get_saleable() && pros[i].get_category() == (*this)[index])
+            {
+                cout << " NAME:" << "               " << pros[i].get_name();
+                cout << " PRICE:" << "               " << pros[i].get_price() <<  endl << "REMAINING:" << "               " << pros[i].get_remaining();
+                cout << " PRODUCER:" << "               " << pros[i].get_producer() << endl;
+                cout << "\t\t----------------------------------------------\n\n";
+            }
+        }
+        line;
+    }
 };
 
 template<typename T>
@@ -460,6 +493,11 @@ void tablep(sQVector<product>& pros, bool user)
             cout << "\t\t----------------------------------------------\n\n";
         }
     }
+}
+
+void search(sQVector<product>& pros, cQVector<string>& category, string target)
+{
+
 }
 
 void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector<product>& pros, int& idp, cQVector<string>& category)
@@ -924,9 +962,9 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                 {
                     category.show();
                     cout << "\n  Enter one of the numbers below:\n";
-                    cout << "\t1)Return\t2)Add\t3)Delete\t4)Change name\n";
+                    cout << "\t1)Return\t2)Add\t3)Delete\t4)Change name\t5)Show products\n";
                     cin >> idd;
-                    if(check_error(idd, 1, 4)) continue;
+                    if(check_error(idd, 1, 5)) continue;
                     cin.ignore();
                     if(idd == 1)
                     {
@@ -1031,6 +1069,27 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                         }
                         continue;
                     }
+                    if(idd == 5)
+                    {
+                        while(true)
+                        {
+                            line;
+                            line;
+                            cout << "  Enter the number of category:\n";
+                            cin >> idd;
+                            if(check_error(idd, 1, category.size()))
+                            {
+                                category.show();
+                                continue;
+                            }
+                            category.show(pros, false, idd);
+                            cout << "  Enter any key to return:\n";
+                            system("pause");
+                            system("cls");
+                            break;
+                        }
+                        continue;
+                    }
                 }
                 continue;
             }
@@ -1127,6 +1186,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
         cout << "\t1)Log Out\n\t2)View Products\n\t3)Search\n\t4)View Categories\n\t5)View Purchase history\n\t6)Change Settings\n";
         line;
         cin >> order;
+        cin.ignore();
         if(check_error(order, 1, 6)) continue;
         if(order == 1)
         {
@@ -1213,6 +1273,65 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    }
                    continue;
                }
+            }
+            continue;
+        }
+        if(order == 3)
+        {
+            system("cls");
+            string entry;
+            while(true)
+            {
+                line;
+                line;
+                cout << "  Enter to search: (ENTER 0 TO CANCEL)\n";
+                getline(cin, entry);
+                if(entry == "0")
+                {
+                    system("cls");
+                    break;
+                }
+                search(pros, category, entry);
+            }
+            continue;
+        }
+        if(order == 4)
+        {
+            string entry;
+            system("cls");
+            while(true)
+            {
+                category.show();
+                cout << "\n  Enter one of the numbers below:\n";
+                cout << "\t1)Return\t2)Show products\n";
+                cin >> idd;
+                if(check_error(idd, 1, 2)) continue;
+                if(idd == 1)
+                {
+                    system("cls");
+                    break;
+                }
+                if(idd == 2)
+                {
+                    while(true)
+                    {
+                        line;
+                        line;
+                        cout << "  Enter the number of category:\n";
+                        cin >> idd;
+                        if(check_error(idd, 1, category.size()))
+                        {
+                            category.show();
+                            continue;
+                        }
+                        category.show(pros, true, idd);
+                        cout << "  Enter any key to return:\n";
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                    continue;
+                }
             }
             continue;
         }

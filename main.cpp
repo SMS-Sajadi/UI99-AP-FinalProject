@@ -2,11 +2,8 @@
 #include <string>
 #include <QVector>
 #include <iomanip>
+#include <fstream>
 using namespace std;
-
-
-//QTextStream in(stdin);
-//QTextStream out(stdout);
 
 #define line cout << "\n-----------------------------------------------------------------------------\n"
 
@@ -57,7 +54,7 @@ private:
     int id = 0;
     string category = "N/A";
     bool saleable = false;
-    unsigned int price;
+    double price;
 public:
     string get_name()
     {
@@ -79,7 +76,7 @@ public:
     {
         return this->saleable;
     }
-    unsigned int get_price()
+    double get_price()
     {
         return this->price;
     }
@@ -112,7 +109,7 @@ public:
     {
         this->saleable = saleable;
     }
-    void set_price(unsigned int price)
+    void set_price(double price)
     {
         this->price = price;
     }
@@ -175,6 +172,7 @@ public:
 
 class user
 {
+    friend void save_data();
 protected:
     string name = "N/A";
     string pass = "N/A";
@@ -230,6 +228,48 @@ public:
     void add_history(product p)
     {
         this->history.append(p);
+    }
+    void save_history(ofstream& file)
+    {
+        file << history.size() << endl;
+        for(int i = 0; i < history.size(); i++)
+        {
+            file << history[i].get_name() << endl;
+            file << history[i].get_producer() << endl;
+            file << history[i].get_category() << endl;
+            file << history[i].get_saleable() << endl;
+            file << history[i].get_remaining() << endl;
+            file << history[i].get_id() << endl;
+            file << history[i].get_price() << endl;
+        }
+    }
+    void load_history(ifstream& file)
+    {
+        int size, entry;
+        double price;
+        product p;
+        string c;
+        file >> size;
+        file.ignore();
+        for(int i = 0; i < size; i++)
+        {
+            getline(file, c);
+            p.set_name(c);
+            getline(file, c);
+            p.set_producer(c);
+            getline(file, c);
+            p.set_category(c);
+            file >> entry;
+            p.set_saleable(bool(entry));
+            file >> entry;
+            p.set_remaining(entry);
+            file >> entry;
+            p.set_id(entry);
+            file >> price;
+            p.set_price(price);
+            this->history.append(p);
+            file.ignore();
+        }
     }
 };
 
@@ -292,8 +332,9 @@ public:
         line;
         for(int i = 0; i < this->size(); i++)
         {
-            cout << "\t" << i-1 << ") " << (*this)[i] << endl;
+            cout << "\t" << i+1 << ") " << (*this)[i] << endl;
         }
+        if(this->size() == 0) cout << "\t\t\t~~~ Empty! ~~~";
         line;
     }
     void change(sQVector<product>& pros, string target, string newc = "N/A")
@@ -353,7 +394,8 @@ bool check_error(T order, T first, T sec)
     return false;
 }
 
-bool check_error(int num)
+template<typename T>
+bool check_error(T num)
 {
     if(num < 0)
     {
@@ -805,9 +847,9 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    tablep(pros, false);
                    line;
                    cout << "  Enter one of the numbers below:\n\n";
-                   cout << "\t1)Return\t2)Add product\t3)Delete product\t4)Change product\n";
+                   cout << "\t1)Return\t2)Add product\t3)Delete product\t4)Change product\t5)Clear\n";
                    cin >> order;
-                   if(check_error(order, 1, 4)) continue;
+                   if(check_error(order, 1, 5)) continue;
                    if(order == 1)
                    {
                        system("cls");
@@ -852,10 +894,11 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                            }
                            while(true)
                            {
+                               double price;
                                cout << "  Enter the price:\n";
-                               cin >> num;
-                               if(check_error(num)) continue;
-                               p.set_price(num);
+                               cin >> price;
+                               if(check_error(price)) continue;
+                               p.set_price(price);
                                break;
                            }
                            while(true)
@@ -934,15 +977,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                while(true)
                                {
                                    line;
-                                   cout << "  NAME" << "----------------" << "ID" << "----------------";
-                                   cout << "CATEGORY" << "----------------" << "PRICE" << "----------------";
-                                   cout << "PRODUCER" << "----------------" << "REMAINING" << "----------------";
-                                   cout << "SALEABLE" << endl;
-                                   cout << pros[index].get_name() << "----------------" << pros[index].get_id() << "----------------" << pros[index].get_category();
-                                   cout << "----------------" << pros[index].get_price() << "----------------" << pros[index].get_producer() << "----------------";
-                                   cout << pros[index].get_remaining() << "----------------";
-                                   if(pros[index].get_saleable()) cout << "TRUE" << endl;
-                                   else cout << "FALSE" << endl;
+                                   cout << " NAME :" << "    \t\t" << pros[index].get_name() << endl;
+                                   cout << " PRODUCER :" << "\t\t" << pros[index].get_producer() << endl;
+                                   cout << " CATEGORY :" << "\t\t" << pros[index].get_category() << endl << endl;
+                                   cout << " ID :" << setw(20) << pros[index].get_id() << setw(10) << "PRICE :" << setw(20) << pros[index].get_price() << setw(17);
+                                   cout << " REMAINING :" << setw(15) << pros[index].get_remaining() << setw(15);
+                                   cout << " SALEABLE :";
+                                   if(pros[index].get_saleable()) cout << "     YES" << endl;
+                                   else cout << "     NO" << endl;
                                    line;
                                    line;
                                    cout << "  Enter one of the numbers below:\n";
@@ -1010,13 +1052,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                    }
                                    if(order == 5)
                                    {
+                                       double price;
                                        while(true)
                                        {
                                            cout << "  Enter the new price:\n";
-                                           cin >> idd;
-                                           if(check_error(idd)) continue;
+                                           cin >> price;
+                                           if(check_error(price)) continue;
                                            cin.ignore();
-                                           pros[index].set_price(idd);
+                                           pros[index].set_price(price);
                                            system("cls");
                                            line;
                                            cout << "\t\t\tPrice chagned!\a";
@@ -1069,6 +1112,35 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                            cout << "\tproducts are:";
                            tablep(pros, false);
                            line;
+                       }
+                       continue;
+                   }
+                   if(order == 5)
+                   {
+                       system("cls");
+                       while(true)
+                       {
+                           line;
+                           cout << "\n  Are you sure to clear products?\a" << endl;
+                           cout << "\n\t1)YES\n2)\tNO\n";
+                           line;
+                           cin >> idd;
+                           if(check_error(idd, 1, 2)) continue;
+                           if(idd == 1)
+                           {
+                               pros.clear();
+                               idp = 12000;
+                               system("cls");
+                               line;
+                               cout << "\t\tProducts removed!";
+                               line;
+                               break;
+                           }
+                           if(idd == 2)
+                           {
+                               system("cls");
+                               break;
+                           }
                        }
                        continue;
                    }
@@ -1338,6 +1410,15 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    int num, indexi;
                    product p;
                    system("cls");
+                   if(!users[index].get_buy())
+                   {
+                       system("cls");
+                       line;
+                       cout << "\t\tYou dont have permission!\a\n";
+                       cout << "\tContanct the admins for more information.";
+                       line;
+                       continue;
+                   }
                    cout << "\tProducts are:";
                    tablep(pros, true);
                    line;
@@ -1542,13 +1623,136 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
     }
 }
 
+void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>& pros, cQVector<string>& category, int& idp, int& idu)
+{
+    string c;
+    user u;
+    admin a;
+    product p;
+    double price;
+    int size, entry;
+    ifstream filec("cat_data.txt");
+    while(getline(filec,c))
+    {
+        category.append(c);
+    }
+    filec.close();
+    ifstream fileu("user_data.txt");
+    fileu >> size;
+    fileu.ignore();
+    for(int i = 0; i < size; i++)
+    {
+        getline(fileu, c);
+        u.set_name(c);
+        getline(fileu, c);
+        u.set_pass(c);
+        fileu >> entry;
+        u.set_buy(entry);
+        fileu >> entry;
+        u.set_id(entry);
+        u.load_history(fileu);
+        users.append(u);
+    }
+    if(size == 0) idu = 1500;
+    else idu = entry + 1;
+    fileu.close();
+    ifstream filea("admin_data.txt");
+    filea >> size;
+    filea.ignore();
+    for(int i = 0; i < size; i++)
+    {
+        getline(filea, c);
+        a.set_name(c);
+        getline(filea, c);
+        a.set_pass(c);
+        filea >> entry;
+        a.set_id(entry);
+        filea >> entry;
+        a.set_buy(entry);
+        a.load_history(filea);
+        admins.append(a);
+    }
+    filea.close();
+    ifstream filep("product_data.txt");
+    filep >> size;
+    filep.ignore();
+    for(int i = 0; i < size; i++)
+    {
+        getline(filep, c);
+        p.set_name(c);
+        getline(filep, c);
+        p.set_producer(c);
+        getline(filep, c);
+        p.set_category(c);
+        filep >> entry;
+        p.set_saleable(bool(entry));
+        filep >> entry;
+        p.set_remaining(entry);
+        filep >> entry;
+        p.set_id(entry);
+        filep >> price;
+        p.set_price(price);
+        pros.append(p);
+        filep.ignore();
+    }
+    if(size == 0) idp = 12000;
+    else idp = entry + 1;
+    filep.close();
+}
+
+void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>& pros, cQVector<string>& category)
+{
+   ofstream filec("cat_data.txt");
+   for(int i = 0; i < category.size(); i++)
+   {
+       filec << category[i] << endl;
+   }
+   filec.close();
+   ofstream fileu("user_data.txt");
+   fileu << users.size() << endl;
+   for(int i = 0; i < users.size(); i++)
+   {
+       fileu << users[i].get_name() << endl;
+       fileu << users[i].get_pass() << endl;
+       fileu << users[i].get_buy() << endl;
+       fileu << users[i].get_id() << endl;
+       users[i].save_history(fileu);
+   }
+   fileu.close();
+   ofstream filea("admin_data.txt");
+   filea << admins.size() << endl;
+   for(int i = 0; i < admins.size(); i++)
+   {
+       filea << admins[i].get_name() << endl;
+       filea << admins[i].get_pass() << endl;
+       filea << admins[i].get_id() << endl;
+       filea << admins[i].get_buy() << endl;
+       admins[i].save_history(filea);
+   }
+   filea.close();
+   ofstream filep("product_data.txt");
+   filep << pros.size() << endl;
+   for(int i = 0; i < pros.size(); i++)
+   {
+       filep << pros[i].get_name() << endl;
+       filep << pros[i].get_producer() << endl;
+       filep << pros[i].get_category() << endl;
+       filep << pros[i].get_saleable() << endl;
+       filep << pros[i].get_remaining() << endl;
+       filep << pros[i].get_id() << endl;
+       filep << pros[i].get_price() << endl;
+   }
+   filep.close();
+}
+
 int main()
 {
     sQVector<user> users;
     sQVector<product> pros;
     sQVector<admin> admins;
     cQVector<string> category;
-    int idp = 12000, idu = 1500, order, check;
+    int idp, idu, order, check;
+    load_data(admins, users, pros, category, idp, idu);
     while(true)
     {
         cout << "\n\t   ********* Welcome to the Soroush Shoping Mall *********" << endl;
@@ -1572,6 +1776,7 @@ int main()
         }
         if(order == 3) break;
     }
+    save_data(admins, users, pros, category);
     system("cls");
     line;
     cout << "\n|------------------------- Hope to see you again :) -------------------------|\n\n";

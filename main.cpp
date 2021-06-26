@@ -172,7 +172,7 @@ public:
 
 class user
 {
-    friend void save_data();
+  //  friend void save_data();
 protected:
     string name = "N/A";
     string pass = "N/A";
@@ -281,7 +281,7 @@ public:
             getline(file, c);
             p.set_category(c);
             file >> entry;
-            p.set_saleable(bool(entry));
+            p.set_saleable(entry);
             file >> entry;
             p.set_remaining(entry);
             file >> entry;
@@ -289,7 +289,7 @@ public:
             file >> price;
             p.set_price(price);
             this->history.append(p);
-            file.ignore();
+            if(i != size - 1 ) file.ignore();
         }
     }
 };
@@ -1739,72 +1739,116 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
     double price;
     int size, entry;
     ifstream filec("cat_data.txt");
-    while(getline(filec,c))
+    if(filec)
     {
-        category.append(c);
+        while(getline(filec,c))
+        {
+            category.append(c);
+        }
     }
     filec.close();
     ifstream fileu("user_data.txt");
-    fileu >> size;
-    fileu.ignore();
-    for(int i = 0; i < size; i++)
+    if(fileu)
     {
-        getline(fileu, c);
-        u.set_name(c);
-        getline(fileu, c);
-        u.set_pass(c);
-        fileu >> entry;
-        u.set_buy(entry);
-        fileu >> entry;
-        u.set_id(entry);
-        u.load_history(fileu);
-        users.append(u);
+        fileu >> size;
+        fileu.ignore();
+        for(int i = 0; i < size; i++)
+        {
+            getline(fileu, c);
+            u.set_name(c);
+            getline(fileu, c);
+            u.set_pass(c);
+            fileu >> entry;
+            u.set_buy(entry);
+            fileu >> entry;
+            u.set_id(entry);
+           // u.load_history(fileu);
+            fileu.ignore();
+            users.append(u);
+        }
+        if(size == 0) idu = 1500;
+        else idu = entry + 1;
     }
-    if(size == 0) idu = 1500;
-    else idu = entry + 1;
+    else idu = 1500;
     fileu.close();
     ifstream filea("admin_data.txt");
-    filea >> size;
-    filea.ignore();
-    for(int i = 0; i < size; i++)
+    if(filea)
     {
-        getline(filea, c);
-        a.set_name(c);
-        getline(filea, c);
-        a.set_pass(c);
-        filea >> entry;
-        a.set_id(entry);
-        filea >> entry;
-        a.set_buy(entry);
-        a.load_history(filea);
-        admins.append(a);
+        filea >> size;
+        filea.ignore();
+        for(int i = 0; i < size; i++)
+        {
+            getline(filea, c);
+            a.set_name(c);
+            getline(filea, c);
+            a.set_pass(c);
+            filea >> entry;
+            a.set_id(entry);
+            filea >> entry;
+            a.set_buy(entry);
+            a.load_history(filea);
+            admins.append(a);
+        }
     }
     filea.close();
     ifstream filep("product_data.txt");
-    filep >> size;
-    filep.ignore();
-    for(int i = 0; i < size; i++)
+    if(filep)
     {
-        getline(filep, c);
-        p.set_name(c);
-        getline(filep, c);
-        p.set_producer(c);
-        getline(filep, c);
-        p.set_category(c);
-        filep >> entry;
-        p.set_saleable(bool(entry));
-        filep >> entry;
-        p.set_remaining(entry);
-        filep >> entry;
-        p.set_id(entry);
-        filep >> price;
-        p.set_price(price);
-        pros.append(p);
+        filep >> size;
         filep.ignore();
+        for(int i = 0; i < size; i++)
+        {
+            getline(filep, c);
+            p.set_name(c);
+            getline(filep, c);
+            p.set_producer(c);
+            getline(filep, c);
+            p.set_category(c);
+            filep >> entry;
+            p.set_saleable(bool(entry));
+            filep >> entry;
+            p.set_remaining(entry);
+            filep >> entry;
+            p.set_id(entry);
+            filep >> price;
+            p.set_price(price);
+            pros.append(p);
+            filep.ignore();
+        }
+        if(size == 0) idp = 12000;
+        else idp = entry + 1;
     }
-    if(size == 0) idp = 12000;
-    else idp = entry + 1;
+    else idp = 12000;
     filep.close();
+    ifstream fileh("history_data.txt");
+    if(fileh)
+    {
+        for(int j = 0; j < users.size(); j++)
+        {
+            fileh >> size;
+            for(int i = 0; i < size; i++)
+            {
+                fileh.ignore();
+                getline(fileh, c);
+                p.set_name(c);
+                getline(fileh, c);
+                p.set_producer(c);
+                getline(fileh, c);
+                p.set_category(c);
+                fileh >> entry;
+                p.set_saleable(bool(entry));
+                fileh >> entry;
+                p.set_remaining(entry);
+                fileh >> entry;
+                p.set_id(entry);
+                fileh >> price;
+                p.set_price(price);
+                users[j].add_history(p);
+               // fileh.ignore();
+            }
+        }
+    }
+    fileh.close();
 }
 
 void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>& pros, cQVector<string>& category)
@@ -1823,7 +1867,7 @@ void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
        fileu << users[i].get_pass() << endl;
        fileu << users[i].get_buy() << endl;
        fileu << users[i].get_id() << endl;
-       users[i].save_history(fileu);
+       //users[i].save_history(fileu);
    }
    fileu.close();
    ofstream filea("admin_data.txt");
@@ -1850,6 +1894,12 @@ void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
        filep << pros[i].get_price() << endl;
    }
    filep.close();
+   ofstream fileh("history_data.txt");
+   for(int j = 0; j < users.size(); j++)
+   {
+       users[j].save_history(fileh);
+   }
+   fileh.close();
 }
 
 int main()

@@ -224,6 +224,7 @@ public:
             cout << "  TOTAL :" << "   \t\t" << history[i].get_remaining() * history[i].get_price();
             if (i != history.size() - 1) cout << "\n\n\t\t----------------------------------------------\n\n";
         }
+        if(history.size() == 0) cout << "\t\t\t~~~ Empty! ~~~";
     }
     void add_history(product p)
     {
@@ -289,7 +290,7 @@ public:
             file >> price;
             p.set_price(price);
             this->history.append(p);
-            if(i != size - 1 ) file.ignore();
+            file.ignore();
         }
     }
 };
@@ -662,7 +663,7 @@ bool search_c(string category, string target)
 void search(sQVector<product>& pros, cQVector<string>& category, string target)
 {
     bool print = false;
-    cout << "\n |~~~      *********************************************************      ~~~|\n";
+    cout << "\n|~~~      *********************************************************      ~~~|\n";
     cout << "\n\n\t\tProducts are:";
     line;
     for(int i = 0; i < pros.size(); i++)
@@ -692,13 +693,13 @@ void search(sQVector<product>& pros, cQVector<string>& category, string target)
     }
     if(print == false) cout << "\t\t\t~~~ Empty! ~~~";
     line;
-    cout << "\n |~~~      *********************************************************      ~~~|\n";
+    cout << "\n|~~~      *********************************************************      ~~~|\n";
 }
 
 void search(sQVector<product>& pros, cQVector<string>& category,sQVector<user>& users, string target)
 {
     bool print = false;
-    cout << "\n |~~~      *********************************************************      ~~~|\n";
+    cout << "\n|~~~      *********************************************************      ~~~|\n";
     cout << "\n\n\t\tProducts are:";
     line;
     for(int i = 0; i < pros.size(); i++)
@@ -744,7 +745,7 @@ void search(sQVector<product>& pros, cQVector<string>& category,sQVector<user>& 
     }
     if(print == false) cout << "\t\t\t~~~ Empty! ~~~";
     line;
-    cout << "\n |~~~      *********************************************************      ~~~|\n";
+    cout << "\n|~~~      *********************************************************      ~~~|\n";
 }
 
 void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector<product>& pros, int& idp, cQVector<string>& category)
@@ -899,6 +900,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                             int index = users.find(idd);
                             if(index != -1)
                             {
+                                system("cls");
                                 line;
                                 users[index].show_history();
                                 line;
@@ -1374,12 +1376,17 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                         category.show();
                         while(true)
                         {
-                            cout << "  Enter the number of category:\n";
+                            cout << "  Enter the number of category: (ENTER 0 TO CANCEL)\n";
                             cin >> idd;
-                            if(check_error(idd, 1, category.size()))
+                            if(check_error(idd, 0, category.size()))
                             {
                                 category.show();
                                 continue;
+                            }
+                            if(idd == 0)
+                            {
+                                system("cls");
+                                break;
                             }
                             system("cls");
                             category.show(pros, false, idd);
@@ -1624,17 +1631,23 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                 }
                 if(idd == 2)
                 {
+                    system("cls");
+                    category.show();
                     while(true)
                     {
-                        line;
-                        line;
                         cout << "  Enter the number of category:\n";
                         cin >> idd;
-                        if(check_error(idd, 1, category.size()))
+                        if(check_error(idd, 0, category.size()))
                         {
                             category.show();
                             continue;
                         }
+                        if(idd == 0)
+                        {
+                            system("cls");
+                            break;
+                        }
+                        system("cls");
                         category.show(pros, true, idd);
                         cout << "  Enter any key to return:\n";
                         system("pause");

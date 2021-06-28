@@ -172,7 +172,6 @@ public:
 
 class user
 {
-  //  friend void save_data();
 protected:
     string name = "N/A";
     string pass = "N/A";
@@ -216,12 +215,12 @@ public:
     {
         for(int i = 0; i < history.size(); i++)
         {
-            cout << "  NAME :" << "    \t\t" << history[i].get_name() << endl;
-            cout << "  ID :" << "      \t\t" << history[i].get_id() << endl;
-            cout << "  Category :" << "\t\t" << history[i].get_category() << endl;
-            cout << "  Numbers :" << " \t\t" << history[i].get_remaining() << endl;
-            cout << "  Price :" << "   \t\t" << history[i].get_price() << endl;
-            cout << "  TOTAL :" << "   \t\t" << history[i].get_remaining() * history[i].get_price();
+            cout << "  NAME :" << "      \t\t" << history[i].get_name() << endl;
+            cout << "  PRODUCT ID :" << "\t\t" << history[i].get_id() << endl;
+            cout << "  Category :" << "  \t\t" << history[i].get_category() << endl;
+            cout << "  Numbers :" << "   \t\t" << history[i].get_remaining() << endl;
+            cout << "  Price :" << "     \t\t" << history[i].get_price() << endl;
+            cout << "  TOTAL :" << "     \t\t" << history[i].get_remaining() * history[i].get_price();
             if (i != history.size() - 1) cout << "\n\n\t\t----------------------------------------------\n\n";
         }
         if(history.size() == 0) cout << "\t\t\t~~~ Empty! ~~~";
@@ -378,15 +377,17 @@ public:
             {
                 if(pros[i].get_category() == (*this)[index - 1])
                 {
-                    if(print) cout << "\t\t--------------------------------------------------\n\n";
-                    cout << " NAME :" << "    \t\t" << pros[i].get_name() << endl;
-                    cout << " PRODUCER :" << "\t\t" << pros[i].get_producer() << endl;
-                    cout << " CATEGORY :" << "\t\t" << pros[i].get_category() << endl << endl;
-                    cout << " ID :" << setw(20) << pros[i].get_id() << setw(10) << "PRICE :" << setw(20) << pros[i].get_price() << setw(17);
-                    cout << " REMAINING :" << setw(15) << pros[i].get_remaining() << setw(15);
+                    if(print) cout << "\n\t\t--------------------------------------------------\n\n";
+                    else cout << endl;
+                    cout << " NAME :" << "     \t\t" << pros[i].get_name() << endl;
+                    cout << " PRODUCER :" << " \t\t" << pros[i].get_producer() << endl;
+                    cout << " CATEGORY :" << " \t\t" << pros[i].get_category() << endl;
+                    cout << " ID :" << "       \t\t" << pros[i].get_id() << endl << endl;
+                    cout << " PRICE :" << "    \t\t" << pros[i].get_price() << endl;
+                    cout << " REMAINING :" << "\t\t" << pros[i].get_remaining() << endl;
                     cout << " SALEABLE :";
-                    if(pros[i].get_saleable()) cout << "     YES" << endl;
-                    else cout << "     NO" << endl;
+                    if(pros[i].get_saleable()) cout << "     \tYES" << endl;
+                    else cout << "     \tNO" << endl;
                     print = true;
                 }
             }
@@ -398,11 +399,13 @@ public:
         {
             if(pros[i].get_saleable() && pros[i].get_category() == (*this)[index - 1])
             {
-                if(print) cout << "\t\t--------------------------------------------------\n\n";
-                cout << " NAME :" << "    \t\t" << pros[i].get_name() << endl;
-                cout << " PRODUCER :" << "\t\t" << pros[i].get_producer() << endl;
-                cout << " CATEGORY :" << "\t\t" << pros[i].get_category() << endl << endl;
-                cout << " PRICE :" << setw(20) << pros[i].get_price() << setw(17) << "REMAINING :" << setw(15) << pros[i].get_remaining() << endl;
+                if(print) cout << "\n\t\t--------------------------------------------------\n\n";
+                else cout << endl;
+                cout << " NAME :" << "     \t\t" << pros[i].get_name() << endl;
+                cout << " PRODUCER :" << " \t\t" << pros[i].get_producer() << endl;
+                cout << " CATEGORY :" << " \t\t" << pros[i].get_category() << endl << endl;
+                cout << " PRICE :" << "    \t\t" << pros[i].get_price() << endl;
+                cout << " REMAINING :" << "\t\t" << pros[i].get_remaining() << endl;
                 print = true;
             }
         }
@@ -411,7 +414,6 @@ public:
     }
 };
 
-//template<typename T>
 bool check_error(int order, int first, int sec)
 {
     if(order < first || order > sec)
@@ -436,6 +438,8 @@ bool check_error(T num)
         cout << "\n|-------------------------- Wrong Input Try Again! --------------------------|\a\n\n";
         return true;
     }
+    cin.clear();
+    cin.ignore(INT32_MAX, '\n');
     return false;
 }
 
@@ -524,10 +528,11 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
     system("cls");
     line;
     line;
+    cin.ignore();
     while(true)
     {
         cout << "   Enter your username: (ENTER 0 TO CANCEL)\n";
-        cin >> entry;
+        getline(cin, entry);
         if(entry == "0")
         {
             system("cls");
@@ -540,7 +545,7 @@ int login(sQVector<admin>& admins, sQVector<user>& users)
             while(true)
             {
                 cout << "   Enter your password: (ENTER 0 TO CANCEL)\n";
-                cin >> entry;
+                getline(cin, entry);
                 if(entry == "0")
                 {
                     system("cls");
@@ -593,8 +598,8 @@ void table(T& data)
     line;
     for(int i = 0; i < data.size(); i++)
     {
-        cout << "  NAME :" << "\t\t" << data[i].get_name() << endl;
-        cout << "  ID :" << setw(20) << data[i].get_id() << setw(15) << "BLOCK :";
+        cout << "  NAME :" << "\t\t" << data[i].get_name() << endl << endl;
+        cout << "  ID :" << "  \t\t" << data[i].get_id() << "\t\t" << "BLOCK :";
         if(data[i].get_buy()) cout << "     NO" << endl;
         else cout << "     YES" << endl;
         if(i != data.size() - 1) cout << "\n\t\t-------------------------------------------------\n\n";
@@ -610,15 +615,17 @@ void tablep(sQVector<product>& pros, bool user)
     {
         for(int i = 0; i < pros.size(); i++)
         {
-            cout << " NAME :" << "    \t\t" << pros[i].get_name() << endl;
-            cout << " PRODUCER :" << "\t\t" << pros[i].get_producer() << endl;
-            cout << " CATEGORY :" << "\t\t" << pros[i].get_category() << endl << endl;
-            cout << " ID :" << setw(20) << pros[i].get_id() << setw(10) << "PRICE :" << setw(20) << pros[i].get_price() << setw(17);
-            cout << " REMAINING :" << setw(15) << pros[i].get_remaining() << setw(15);
+            if(i == 0) cout << endl;
+            cout << " NAME :" << "     \t\t" << pros[i].get_name() << endl;
+            cout << " PRODUCER :" << " \t\t" << pros[i].get_producer() << endl;
+            cout << " CATEGORY :" << " \t\t" << pros[i].get_category() << endl;
+            cout << " ID :" << "       \t\t" << pros[i].get_id() << endl << endl;
+            cout << " PRICE :" << "    \t\t" << pros[i].get_price() << endl;
+            cout << " REMAINING :" << "\t\t" << pros[i].get_remaining() << endl;
             cout << " SALEABLE :";
-            if(pros[i].get_saleable()) cout << "     YES" << endl;
-            else cout << "     NO" << endl;
-            if(i != pros.size() - 1) cout << "\t\t--------------------------------------------------\n\n";
+            if(pros[i].get_saleable()) cout << "     \tYES" << endl;
+            else cout << "     \tNO" << endl;
+            if(i != pros.size() - 1) cout << "\n\t\t--------------------------------------------------\n\n";
         }
         if(pros.empty()) cout << "\t\t\t~~~ Empty! ~~~";
         return;
@@ -627,11 +634,13 @@ void tablep(sQVector<product>& pros, bool user)
     {
         if(pros[i].get_saleable())
         {
-            if(print) cout << "\t\t--------------------------------------------------\n\n";
-            cout << " NAME :" << "    \t\t" << pros[i].get_name() << endl;
-            cout << " PRODUCER :" << "\t\t" << pros[i].get_producer() << endl;
-            cout << " CATEGORY :" << "\t\t" << pros[i].get_category() << endl << endl;
-            cout << " PRICE :" << setw(20) << pros[i].get_price() << setw(17) << "REMAINING :" << setw(15) << pros[i].get_remaining() << endl;
+            if(print) cout << "\n\t\t--------------------------------------------------\n\n";
+            else cout << endl;
+            cout << " NAME :" << "     \t\t" << pros[i].get_name() << endl;
+            cout << " PRODUCER :" << " \t\t" << pros[i].get_producer() << endl;
+            cout << " CATEGORY :" << " \t\t" << pros[i].get_category() << endl << endl;
+            cout << " PRICE :" << "    \t\t" << pros[i].get_price() << endl;
+            cout << " REMAINING :" << "\t\t" << pros[i].get_remaining() << endl;
             print = true;
         }
     }
@@ -668,13 +677,15 @@ void search(sQVector<product>& pros, cQVector<string>& category, string target)
     line;
     for(int i = 0; i < pros.size(); i++)
     {
-        if(pros[i].search(target))
+        if(pros[i].search(target) && pros[i].get_saleable())
         {
-            if(print) cout << "\t\t-----------------------------------------------------\n";
-            cout << " NAME :" << "    \t\t" << pros[i].get_name() << endl;
-            cout << " PRODUCER :" << "\t\t" << pros[i].get_producer() << endl;
-            cout << " CATEGORY :" << "\t\t" << pros[i].get_category() << endl << endl;
-            cout << " PRICE :" << setw(20) << pros[i].get_price() << setw(17) << "REMAINING :" << setw(15) << pros[i].get_remaining() << endl;
+            if(print) cout << "\n\t\t-----------------------------------------------------\n\n";
+            else cout << endl;
+            cout << " NAME :" << "     \t\t" << pros[i].get_name() << endl;
+            cout << " PRODUCER :" << " \t\t" << pros[i].get_producer() << endl;
+            cout << " CATEGORY :" << " \t\t" << pros[i].get_category() << endl << endl;
+            cout << " PRICE :" << "    \t\t" << pros[i].get_price() << endl;
+            cout << " REMAINING :" << "\t\t" << pros[i].get_remaining() << endl;
             print = true;
         }
     }
@@ -706,12 +717,17 @@ void search(sQVector<product>& pros, cQVector<string>& category,sQVector<user>& 
     {
         if(pros[i].search(target))
         {
-            if(print) cout << "\t\t-----------------------------------------------------\n";
-            cout << " NAME :" << "    \t\t" << pros[i].get_name() << endl;
-            cout << " PRODUCER :" << "\t\t" << pros[i].get_producer() << endl;
-            cout << " CATEGORY :" << "\t\t" << pros[i].get_category() << endl;
-            cout << " ID :" << "      \t\t" << pros[i].get_id() << endl << endl;
-            cout << " PRICE :" << setw(20) << pros[i].get_price() << setw(17) << "REMAINING :" << setw(15) << pros[i].get_remaining() << endl;
+            if(print) cout << "\n\t\t-----------------------------------------------------\n\n";
+            else cout << endl;
+            cout << " NAME :" << "     \t\t" << pros[i].get_name() << endl;
+            cout << " PRODUCER :" << " \t\t" << pros[i].get_producer() << endl;
+            cout << " CATEGORY :" << " \t\t" << pros[i].get_category() << endl;
+            cout << " ID :" << "       \t\t" << pros[i].get_id() << endl << endl;
+            cout << " PRICE :" << "    \t\t" << pros[i].get_price() << endl;
+            cout << " REMAINING :" << "\t\t" << pros[i].get_remaining() << endl;
+            cout << " SALEABLE :";
+            if(pros[i].get_saleable()) cout << "     \tYES" << endl;
+            else cout << "     \tNO" << endl;
             print = true;
         }
     }
@@ -737,7 +753,8 @@ void search(sQVector<product>& pros, cQVector<string>& category,sQVector<user>& 
     {
         if(users[i].search(target))
         {
-            if(print) cout << "\t\t-----------------------------------------------------\n";
+            if(print) cout << "\n\t\t-----------------------------------------------------\n\n";
+            else cout << endl;
             cout << "\tNAME :" << "\t\t" << users[i].get_name() << endl;
             cout << "\tID :" << "  \t\t" << users[i].get_id() << endl;
             print = true;
@@ -782,7 +799,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     table(users);
                     line;
                     cout << "  Enter one of the numbers below:\n\n";
-                    cout << "\t1)Return\t2)Add admin\t3)Delete User\t4)Block/Unblock user\t5)View User History\n";
+                    cout << "\t1)Return\t2)Add admin\t3)Delete User\t  4)Block/Unblock user\t   5)View User History\n";
                     cin >> order;
                     if(check_error(order, 1, 5)) continue;
                     if(order == 1)
@@ -794,6 +811,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     {
                         while(true)
                         {
+                            if(users.empty())
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tNo User avalible!\a";
+                                line;
+                                break;
+                            }
                             cout << "  Enter the user id to add as an admin: (ENTER 0 TO CANCEL)\n";
                             cin >> idd;
                             if(idd == 0)
@@ -826,6 +851,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     {
                         while(true)
                         {
+                            if(users.empty())
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tNo User avalible!\a";
+                                line;
+                                break;
+                            }
                             cout << "  Enter the user id to delete: (ENTER 0 TO CANCEL)\n";
                             cin >> idd;
                             if(idd == 0)
@@ -858,6 +891,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     {
                         while(true)
                         {
+                            if(users.empty())
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tNo User avalible!\a";
+                                line;
+                                break;
+                            }
                             cout << "  Enter the user id to block/unblock: (ENTER 0 TO CANCEL)\n";
                             cin >> idd;
                             if(idd == 0)
@@ -890,6 +931,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     {
                         while(true)
                         {
+                            if(users.empty())
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tNo User avalible!\a";
+                                line;
+                                break;
+                            }
                             cout << "  Enter the user id to see history: (ENTER 0 TO CANCEL)\n";
                             cin >> idd;
                             if(idd == 0)
@@ -955,7 +1004,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    tablep(pros, false);
                    line;
                    cout << "  Enter one of the numbers below:\n\n";
-                   cout << "\t1)Return\t2)Add product\t3)Delete product\t4)Change product\t5)Clear\n";
+                   cout << "\t1)Return\t2)Add product\t    3)Delete product\t    4)Change product\t    5)Clear\n";
                    cin >> order;
                    if(check_error(order, 1, 5)) continue;
                    if(order == 1)
@@ -988,7 +1037,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                break;
                            }
                            p.set_producer(entry);
-                           cout << "  Enter the category: (ENTER 0 TO CANCEL)\n";
+                           cout << "  Enter the category: (ENTER 0 TO CANCEL OR N/A FOR SKIPPING)\n";
                            getline(cin, entry);
                            if(entry == "0")
                            {
@@ -996,7 +1045,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                break;
                            }
                            p.set_category(entry);
-                           if(category.find(entry) == -1)
+                           if(category.find(entry) == -1 && entry != "N/A")
                            {
                                category.append(entry);
                            }
@@ -1007,6 +1056,10 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                cin >> price;
                                if(check_error(price)) continue;
                                p.set_price(price);
+                               if(price == 0)
+                               {
+                                   cout << "\n ~(Your input didnt recognized well! Edit if needed.)~\a\n\n";
+                               }
                                break;
                            }
                            while(true)
@@ -1015,16 +1068,29 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                cin >> num;
                                if(check_error(num)) continue;
                                p.set_remaining(num);
+                               if(num == 0)
+                               {
+                                   cout << "\n ~(Your input didnt recognized well! Edit if needed.)~\a\n\n";
+                               }
                                break;
                            }
-                           while(true)
+                           if(p.get_remaining() != 0)
                            {
-                               cout << "  Do you want to make it saleable? (1 == YES, 2 == NO)\n";
-                               cin >> num;
-                               if(check_error(num, 1, 2)) continue;
-                               if(num == 1) p.set_saleable(true);
-                               else p.set_saleable(false);
-                               break;
+                               while(true)
+                               {
+                                   cout << "  Do you want to make it saleable? (1 == YES, 2 == NO)\n";
+                                   cin >> num;
+                                   if(check_error(num, 1, 2)) continue;
+                                   if(num == 1) p.set_saleable(true);
+                                   else p.set_saleable(false);
+                                   break;
+                               }
+                           }
+                           else
+                           {
+                               cout << " ~(Since remaining is 0, product won't be saleable)~\a\n";
+                               cout << "  Enter any key to continue:\n";
+                               system("pause");
                            }
                            p.set_id(idp++);
                            pros.append(p);
@@ -1085,17 +1151,19 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                while(true)
                                {
                                    line;
-                                   cout << " NAME :" << "    \t\t" << pros[index].get_name() << endl;
-                                   cout << " PRODUCER :" << "\t\t" << pros[index].get_producer() << endl;
-                                   cout << " CATEGORY :" << "\t\t" << pros[index].get_category() << endl << endl;
-                                   cout << " ID :" << setw(20) << pros[index].get_id() << setw(10) << "PRICE :" << setw(20) << pros[index].get_price() << setw(17);
-                                   cout << " REMAINING :" << setw(15) << pros[index].get_remaining() << setw(15);
+                                   cout << endl;
+                                   cout << " NAME :" << "     \t\t" << pros[index].get_name() << endl;
+                                   cout << " PRODUCER :" << " \t\t" << pros[index].get_producer() << endl;
+                                   cout << " CATEGORY :" << " \t\t" << pros[index].get_category() << endl;
+                                   cout << " ID :" << "       \t\t" << pros[index].get_id() << endl << endl;
+                                   cout << " PRICE :" << "    \t\t" << pros[index].get_price() << endl;
+                                   cout << " REMAINING :" << "\t\t" << pros[index].get_remaining() << endl;
                                    cout << " SALEABLE :";
-                                   if(pros[index].get_saleable()) cout << "     YES" << endl;
-                                   else cout << "     NO" << endl;
+                                   if(pros[index].get_saleable()) cout << "     \tYES" << endl;
+                                   else cout << "     \tNO" << endl;
                                    line;
                                    line;
-                                   cout << "  Enter one of the numbers below:\n";
+                                   cout << "  Enter one of the numbers below:\n\n";
                                    cout << "\t1)Return\n\t2)Change name\n\t3)Change producer\n\t4)Change category\n\t5)Change price\n\t6)Change remaining\n\t7)Change saleablity\n";
                                    cin >> order;
                                    if(check_error(order, 1, 7)) continue;
@@ -1108,7 +1176,6 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                    if(order == 2)
                                    {
                                        cout << "  Enter the new name: (ENTER 0 TO CANCEL)\n";
-
                                        getline(cin, entry);
                                        if(entry == "0")
                                        {
@@ -1140,14 +1207,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                    }
                                    if(order == 4)
                                    {
-                                       cout << "  Enter the new category: (ENTER 0 TO CANCEL)\n";
+                                       cout << "  Enter the new category: (ENTER 0 TO CANCEL OR N/A TO DELETE)\n";
                                        getline(cin, entry);
                                        if(entry == "0")
                                        {
                                            system("cls");
                                            continue;
                                        }
-                                       if(category.find(entry) == -1)
+                                       if(category.find(entry) == -1 && entry != "N/A")
                                        {
                                            category.append(entry);
                                        }
@@ -1166,8 +1233,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                            cout << "  Enter the new price:\n";
                                            cin >> price;
                                            if(check_error(price)) continue;
-                                           cin.ignore();
                                            pros[index].set_price(price);
+                                           if(price == 0)
+                                           {
+                                               cout << "\n ~(Your input didnt recognized well! Edit if needed.)~\a\n\n";
+                                               cout << " Enter any key to continue:\n";
+                                               system("pause");
+                                           }
                                            system("cls");
                                            line;
                                            cout << "\t\t\tPrice chagned!\a";
@@ -1183,8 +1255,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                            cout << "  Enter the new remaining:\n";
                                            cin >> idd;
                                            if(check_error(idd)) continue;
-                                           cin.ignore();
                                            pros[index].set_remaining(idd);
+                                           if(idd == 0)
+                                           {
+                                               cout << "\n ~(Your input didnt recognized well! Edit if needed.)~\a\n\n";
+                                               cout << " Enter any key to continue:\n";
+                                               system("pause");
+                                           }
                                            system("cls");
                                            line;
                                            cout << "\t\t\tRemaining chagned!\a";
@@ -1230,7 +1307,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                        {
                            line;
                            cout << "\n  Are you sure to clear products?\a" << endl;
-                           cout << "\n\t1)YES\n2)\tNO\n";
+                           cout << "\n\t1)YES\n\t2)NO\n";
                            line;
                            cin >> idd;
                            if(check_error(idd, 1, 2)) continue;
@@ -1284,6 +1361,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                 system("cls");
                                 break;
                             }
+                            if(entry == "N/A")
+                            {
+                                system("cls");
+                                line;
+                                cout << "\t\t\tN/A is unacceptable!\a";
+                                line;
+                                continue;
+                            }
                             if(category.find(entry) == -1)
                             {
                                 category.append(entry);
@@ -1304,6 +1389,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     if(idd == 3)
                     {
                         system("cls");
+                        category.show();
                         while(true)
                         {
                             cout << "  Enter the name of category to delete: (ENTER 0 TO CANCEL)\n";
@@ -1334,10 +1420,10 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     if(idd == 4)
                     {
                         system("cls");
+                        category.show();
                         int index;
                         while(true)
                         {
-                            line;
                             cout << "  Enter the name of category to change: (ENTER 0 TO CANCEL)\n";
                             getline(cin, entry);
                             if(entry == "0")
@@ -1350,18 +1436,37 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                             {
                                 cout << "  Enter the new name: (ENTER 0 TO CANCEL)\n";
                                 getline(cin, entry);
+                                while(entry == "N/A")
+                                {
+                                    system("cls");
+                                    line;
+                                    cout << "\t\t\tN/A is unacceptable!\a";
+                                    line;
+                                    category.show();
+                                    cout << "  Enter the new name: (ENTER 0 TO CANCEL)\n";
+                                    getline(cin, entry);
+                                }
                                 if(entry == "0")
                                 {
                                     system("cls");
                                     break;
                                 }
-                                category.change(pros, category[index], entry);
-                                category[index] = entry;
+                                if(category.find(entry) == -1)
+                                {
+                                    category.change(pros, category[index], entry);
+                                    category[index] = entry;
+                                    system("cls");
+                                    line;
+                                    cout << "\t\t\tCategory name changed!\a";
+                                    line;
+                                    break;
+                                }
                                 system("cls");
                                 line;
-                                cout << "\t\t\tCategory name changed!\a";
+                                cout << "\t\t\tCategory exist!\a";
                                 line;
-                                break;
+                                category.show();
+                                continue;
                             }
                             system("cls");
                             line;
@@ -1418,7 +1523,32 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                 while(true)
                 {
                     line;
-                    cout << "  Enter one of the numbers below:\n";
+                    cout << "  Enter your password to continue: (ENTER 0 TO CANCEL)\n";
+                    cin >> entry;
+                    if(entry == "0")
+                    {
+                        system("cls");
+                        break;
+                    }
+                    if(entry != admins[id - 1].get_pass())
+                    {
+                        system("cls");
+                        line;
+                        cout << "\t\t\tWrong Password!\a";
+                        line;
+                        continue;
+                    }
+                    break;
+                }
+                if(entry == "0")
+                {
+                    continue;
+                }
+                system("cls");
+                while(true)
+                {
+                    line;
+                    cout << "  Enter one of the numbers below:\n\n";
                     cout << "\t1)Return\n\t2)Change username\n\t3)Change password\n";
                     cin >> idd;
                     if(check_error(idd, 1, 3)) continue;
@@ -1431,11 +1561,11 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     if(idd == 2)
                     {
                         system("cls");
+                        line;
+                        line;
                         while(true)
-                        {
-                            line;
-                            line;
-                            cout << "   Enter your new username: (NO SPACE, ENTER 0 TO CANCEL)\n";
+                        { 
+                            cout << "\n   Enter your new username: (NO SPACE, ENTER 0 TO CANCEL)\n";
                             cin >> entry;
                             if(entry == "0")
                             {
@@ -1464,7 +1594,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                         system("cls");
                         line;
                         line;
-                        cout << "   Enter your password: (NO SPACE, ENTER 0 TO CANCEL)\n";
+                        cout << "   Enter your new password: (NO SPACE, ENTER 0 TO CANCEL)\n";
                         cin >> entry;
                         if(entry == "0")
                         {
@@ -1677,7 +1807,32 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
             while(true)
             {
                 line;
-                cout << "  Enter one of the numbers below:\n";
+                cout << "  Enter your password to continue: (ENTER 0 TO CANCEL)\n";
+                cin >> entry;
+                if(entry == "0")
+                {
+                    system("cls");
+                    break;
+                }
+                if(entry != users[index].get_pass())
+                {
+                    system("cls");
+                    line;
+                    cout << "\t\t\tWrong Password!\a";
+                    line;
+                    continue;
+                }
+                break;
+            }
+            if(entry == "0")
+            {
+                continue;
+            }
+            system("cls");
+            while(true)
+            {
+                line;
+                cout << "  Enter one of the numbers below:\n\n";
                 cout << "\t1)Return\n\t2)Change username\n\t3)Change password\n";
                 cin >> idd;
                 if(check_error(idd, 1, 3)) continue;
@@ -1723,7 +1878,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     system("cls");
                     line;
                     line;
-                    cout << "   Enter your password: (NO SPACE, ENTER 0 TO CANCEL)\n";
+                    cout << "   Enter your new password: (NO SPACE, ENTER 0 TO CANCEL)\n";
                     cin >> entry;
                     if(entry == "0")
                     {
@@ -1775,7 +1930,6 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
             u.set_buy(entry);
             fileu >> entry;
             u.set_id(entry);
-           // u.load_history(fileu);
             fileu.ignore();
             users.append(u);
         }
@@ -1857,7 +2011,6 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
                 fileh >> price;
                 p.set_price(price);
                 users[j].add_history(p);
-               // fileh.ignore();
             }
         }
     }
@@ -1880,7 +2033,6 @@ void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
        fileu << users[i].get_pass() << endl;
        fileu << users[i].get_buy() << endl;
        fileu << users[i].get_id() << endl;
-       //users[i].save_history(fileu);
    }
    fileu.close();
    ofstream filea("admin_data.txt");
@@ -1925,7 +2077,7 @@ int main()
     load_data(admins, users, pros, category, idp, idu);
     while(true)
     {
-        cout << "\n\t   ********* Welcome to the Soroush Shoping Mall *********" << endl;
+        cout << "\n\n\t   ********* Welcome to the Soroush Shoping Mall *********" << endl;
         line;
         cout << "\n   Enter one of the numbers below :\n";
         cout << "\n\n\t1)Login\t\t2)Sign up\t3)Exit\n\n";

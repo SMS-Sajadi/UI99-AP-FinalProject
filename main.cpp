@@ -1023,6 +1023,17 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                            cout << "  Enter the name of product: (ENTER 0 TO CANCEL)\n";
                            cin.ignore();
                            getline(cin, entry);
+                           while(pros.find(entry) != -1)
+                           {
+                               system("cls");
+                               cout << " ~(Product Exist, Change the product or enter 0 to cancel)~\n\a";
+                               getline(cin, entry);
+                               if(entry == "0")
+                               {
+                                   system("cls");
+                                   break;
+                               }
+                           }
                            if(entry == "0")
                            {
                                system("cls");
@@ -1177,6 +1188,31 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                                    {
                                        cout << "  Enter the new name: (ENTER 0 TO CANCEL)\n";
                                        getline(cin, entry);
+                                       while(pros.find(entry) != -1)
+                                       {
+                                           system("cls");
+
+                                           line;
+                                           cout << endl;
+                                           cout << " NAME :" << "     \t\t" << pros[index].get_name() << endl;
+                                           cout << " PRODUCER :" << " \t\t" << pros[index].get_producer() << endl;
+                                           cout << " CATEGORY :" << " \t\t" << pros[index].get_category() << endl;
+                                           cout << " ID :" << "       \t\t" << pros[index].get_id() << endl << endl;
+                                           cout << " PRICE :" << "    \t\t" << pros[index].get_price() << endl;
+                                           cout << " REMAINING :" << "\t\t" << pros[index].get_remaining() << endl;
+                                           cout << " SALEABLE :";
+                                           if(pros[index].get_saleable()) cout << "     \tYES" << endl;
+                                           else cout << "     \tNO" << endl;
+                                           line;
+                                           line;
+                                           cout << " ~(Product Exist, Change the name or enter 0 to cancel)~\n\a";
+                                           getline(cin, entry);
+                                           if(entry == "0")
+                                           {
+                                               system("cls");
+                                               break;
+                                           }
+                                       }
                                        if(entry == "0")
                                        {
                                            system("cls");

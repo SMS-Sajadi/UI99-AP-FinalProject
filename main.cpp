@@ -1,7 +1,14 @@
+//This is the Final project of Advanced Programming in University of Isfahan
+//This program is written by SMS Sajadi B.SC of Computer engineering
+//Copy Write 2021|1400 Spring
+//This program is about the Shoppingmall management system
+//This program managed with GitHub
+//GitHub Link:
+//https://github.com/SMS-Sajadi/UI99-AP-FinalProject.git
+
 #include <iostream>
 #include <string>
 #include <QVector>
-#include <iomanip>
 #include <fstream>
 using namespace std;
 
@@ -1115,6 +1122,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    }
                    if(order == 3)
                    {
+                       if(pros.empty())
+                       {
+                           system("cls");
+                           line;
+                           cout << "\t\t\tNo product available!\a";
+                           line;
+                           continue;
+                       }
                        while(true)
                        {
                            cout << "  Enter the product id to delete: (ENTER 0 TO CANCEL)\n";
@@ -1145,6 +1160,14 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    if(order == 4)
                    {
                        int index;
+                       if(pros.empty())
+                       {
+                           system("cls");
+                           line;
+                           cout << "\t\t\tNo product available!\a";
+                           line;
+                           continue;
+                       }
                        while(true)
                        {
                            cout << "  Enter the product id to change: (ENTER 0 TO CANCEL)\n";
@@ -1339,6 +1362,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    if(order == 5)
                    {
                        system("cls");
+                       if(pros.empty())
+                       {
+                           line;
+                           cout << "\t\t\tNo product available!\a";
+                           line;
+                           continue;
+                       }
                        while(true)
                        {
                            line;
@@ -1425,6 +1455,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     if(idd == 3)
                     {
                         system("cls");
+                        if(category.empty())
+                        {
+                            line;
+                            cout << "\t\t\tNo Category available!\a";
+                            line;
+                            continue;
+                        }
                         category.show();
                         while(true)
                         {
@@ -1456,6 +1493,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     if(idd == 4)
                     {
                         system("cls");
+                        if(category.empty())
+                        {
+                            line;
+                            cout << "\t\t\tNo Category available!\a";
+                            line;
+                            continue;
+                        }
                         category.show();
                         int index;
                         while(true)
@@ -1514,6 +1558,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                     if(idd == 5)
                     {
                         system("cls");
+                        if(category.empty())
+                        {
+                            line;
+                            cout << "\t\t\tNo Category available!\a";
+                            line;
+                            continue;
+                        }
                         category.show();
                         while(true)
                         {
@@ -1690,6 +1741,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                    int num, indexi;
                    product p;
                    system("cls");
+                   if(pros.empty())
+                   {
+                       line;
+                       cout << "\t\t\tNo product available!\a";
+                       line;
+                       continue;
+                   }
                    if(!users[index].get_buy())
                    {
                        system("cls");
@@ -1786,7 +1844,7 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
             while(true)
             {
                 category.show();
-                cout << "\n  Enter one of the numbers below:\n";
+                cout << "\n  Enter one of the numbers below:\n\n";
                 cout << "\t1)Return\t2)Show products\n";
                 cin >> idd;
                 if(check_error(idd, 1, 2)) continue;
@@ -1798,6 +1856,13 @@ void mainwindow(sQVector<admin>& admins, sQVector<user>& users, int id, sQVector
                 if(idd == 2)
                 {
                     system("cls");
+                    if(category.empty())
+                    {
+                        line;
+                        cout << "\t\t\tNo Category available!\a";
+                        line;
+                        continue;
+                    }
                     category.show();
                     while(true)
                     {

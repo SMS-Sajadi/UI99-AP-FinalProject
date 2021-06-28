@@ -2007,7 +2007,7 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
     product p;
     double price;
     int size, entry;
-    ifstream filec("cat_data.txt");
+    ifstream filec("cat_data.bin");
     if(filec)
     {
         while(getline(filec,c))
@@ -2016,7 +2016,7 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
         }
     }
     filec.close();
-    ifstream fileu("user_data.txt");
+    ifstream fileu("user_data.bin");
     if(fileu)
     {
         fileu >> size;
@@ -2039,7 +2039,7 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
     }
     else idu = 1500;
     fileu.close();
-    ifstream filea("admin_data.txt");
+    ifstream filea("admin_data.bin");
     if(filea)
     {
         filea >> size;
@@ -2059,7 +2059,7 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
         }
     }
     filea.close();
-    ifstream filep("product_data.txt");
+    ifstream filep("product_data.bin");
     if(filep)
     {
         filep >> size;
@@ -2088,7 +2088,7 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
     }
     else idp = 12000;
     filep.close();
-    ifstream fileh("history_data.txt");
+    ifstream fileh("history_data.bin");
     if(fileh)
     {
         for(int j = 0; j < users.size(); j++)
@@ -2120,13 +2120,13 @@ void load_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
 
 void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>& pros, cQVector<string>& category)
 {
-   ofstream filec("cat_data.txt");
+   ofstream filec("cat_data.bin");
    for(int i = 0; i < category.size(); i++)
    {
        filec << category[i] << endl;
    }
    filec.close();
-   ofstream fileu("user_data.txt");
+   ofstream fileu("user_data.bin");
    fileu << users.size() << endl;
    for(int i = 0; i < users.size(); i++)
    {
@@ -2136,7 +2136,7 @@ void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
        fileu << users[i].get_id() << endl;
    }
    fileu.close();
-   ofstream filea("admin_data.txt");
+   ofstream filea("admin_data.bin");
    filea << admins.size() << endl;
    for(int i = 0; i < admins.size(); i++)
    {
@@ -2147,7 +2147,7 @@ void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
        admins[i].save_history(filea);
    }
    filea.close();
-   ofstream filep("product_data.txt");
+   ofstream filep("product_data.bin");
    filep << pros.size() << endl;
    for(int i = 0; i < pros.size(); i++)
    {
@@ -2160,7 +2160,7 @@ void save_data(sQVector<admin>& admins, sQVector<user>& users, sQVector<product>
        filep << pros[i].get_price() << endl;
    }
    filep.close();
-   ofstream fileh("history_data.txt");
+   ofstream fileh("history_data.bin");
    for(int j = 0; j < users.size(); j++)
    {
        users[j].save_history(fileh);
